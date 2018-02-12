@@ -111,14 +111,28 @@ func ReadHistory(path string, display *DisplayThermometer) {
 		log.Fatal(err)
 	}
 
-    fmt.Println(">>")
-	fmt.Print(records)
+    offset := len(records) - 7
+    display.HistoryAir   = "0,223 "
+    display.HistoryWater = "0,223 "
+    for i := offset; i < len(records); i++ {
+        x := (i - offset) * 80
+        t_air, err := strconv.ParseFloat(records[i][0], 64)
+        if err != nil {
+            log.Fatal(err)
+        }
+        t_water, _ := strconv.ParseFloat(records[i][1], 64)
+        if err != nil {
+            log.Fatal(err)
+        }
+        y_air := (50 - t_air) * 4 + 25
+        y_water := (50 - t_water) * 4 + 25
+        
+        display.HistoryAir += i2s(x) + "," + f2s(y_air) + " "
+        display.HistoryWater += i2s(x) + "," + f2s(y_water) + " "
+    }
     
-    
-     // TODO Read water and air history
-    display.HistoryAir = "0,223 48,138.5 154.7,169 211,88.5 294.5,80.5 380,165.2 437,75.5 469.5,223.3"
-    
-    display.HistoryWater = "0,223 0,50 48,120.5 154.7,169 211,88.5 294.5,80.5 380,165.2 437,75.5 469.5,223.3"
+    display.HistoryAir   += " 480,223"
+    display.HistoryWater += " 480,223"
 }
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
@@ -133,6 +147,14 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
     ReadHistory("history.csv", &display)
     t, _ := template.ParseFiles("index.html")
     t.Execute(w, display)
+}
+
+func i2s(v int) string {
+    return strconv.FormatInt(int64(v), 10)
+}
+
+func f2s(v float64) string {
+    return strconv.FormatFloat(v, 'f', -1, 32)
 }
 
 func recordHandler(w http.ResponseWriter, r *http.Request) {
