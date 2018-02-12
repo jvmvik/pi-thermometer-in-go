@@ -34,6 +34,13 @@ type DisplayThermometer struct {
     HistoryWater string
 }
 
+func GetRoot() string {
+    // For debug
+    //return "data/"
+    // On the raspberry pi
+    return "/sys/devices/w1_bus_master1/"
+}
+
 func ReadDatapoint(root string) Datapoint {
 	files, err := filepath.Glob(root + "/*/w1_slave")
 	if err != nil {
@@ -68,8 +75,7 @@ func ReadTemperature(path string, id string) *Thermometer {
 }
 
 func jsonHandler(w http.ResponseWriter, r *http.Request) {
-	root := "/sys/devices/w1_bus_master1/"
-	datapoint := ReadDatapoint(root)
+    datapoint := ReadDatapoint(GetRoot())
 	data, err := json.Marshal(datapoint)
 	if err != nil {
 		log.Fatal("fail encoding datapoint to JSON")
@@ -140,10 +146,8 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
         http.NotFound(w, r)
         return
     }
-    root := "data/"
-    
     // Current value to display
-    display := ReadDisplay(root)
+    display := ReadDisplay(GetRoot())
     ReadHistory("history.csv", &display)
     t, _ := template.ParseFiles("index.html")
     t.Execute(w, display)
@@ -159,7 +163,7 @@ func f2s(v float64) string {
 
 func recordHandler(w http.ResponseWriter, r *http.Request) {
     
-    p := ReadDisplay("data/")
+    p := ReadDisplay(GetRoot())
     
     // header {"air", "water", "timestamp"}
     record := []string{strconv.FormatFloat(float64(p.Air), 'f', -1, 32),
