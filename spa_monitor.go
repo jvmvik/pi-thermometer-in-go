@@ -16,6 +16,7 @@ import (
     "time"
     "os"
     "bufio"
+    "math"
 )
 
 // Group of measurement
@@ -24,12 +25,12 @@ type Datapoint []Thermometer
 // Single thermoter
 type Thermometer struct {
 	ID    string
-	Value float32
+	Value float64
 }
 
 type DisplayThermometer struct {
-    Air float32
-    Water float32
+    Air float64
+    Water float64
     HistoryAir string
     HistoryWater string
 }
@@ -71,7 +72,7 @@ func ReadTemperature(path string, id string) *Thermometer {
 	if err != nil {
 		log.Fatal("fail to parse temperature")
 	}
-	return &Thermometer{id, float32(temperature / 1000)}
+	return &Thermometer{id, float64(temperature / 1000)}
 }
 
 func jsonHandler(w http.ResponseWriter, r *http.Request) {
@@ -83,8 +84,9 @@ func jsonHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, string(data))
 }
 
-func Round(x, unit float32) float32 {
-	return float32(int32(x/unit+0.5)) * unit
+func Round(x float64, places int) float64 {
+  shift := math.Pow(10, float64(places))
+  return math.Floor(x * shift) / shift
 }
 
 func ReadDisplay(root string) DisplayThermometer {
@@ -92,10 +94,10 @@ func ReadDisplay(root string) DisplayThermometer {
     var display DisplayThermometer
     for _, item := range datapoint {
         if(item.ID == "28-0517c1a38eff") {
-            display.Water = Round(item.Value, 0.1)
+            display.Water = Round(item.Value, 1)
         }
         if(item.ID == "28-0517c207d1ff") {
-            display.Air = Round(item.Value, 0.1)
+            display.Air = Round(item.Value, 1)
         }
     }
     
