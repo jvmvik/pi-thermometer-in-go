@@ -204,5 +204,5 @@ func main() {
     h.Handle("/static/", http.StripPrefix("/static/", fs))
     
     h.HandleFunc("/", indexHandler)
-	http.ListenAndServe(":8888", h)
+	http.ListenAndServe(":80", h)
 }

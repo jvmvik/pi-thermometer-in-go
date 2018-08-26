@@ -1,0 +1,15 @@
+[Unit]
+Description=spa monitoring
+After=network.target
+
+[Service]
+ExecStart=/home/pi/thermometer/spa_monitor
+WorkingDirectory=/home/pi/thermometer
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=root
+
+[Install]
+WantedBy=multi-user.target
+

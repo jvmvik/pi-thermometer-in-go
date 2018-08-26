@@ -85,6 +85,7 @@ html, body {
 
 .demo-charts {
   align-items: center;
+  margin: 20px;
 }
 .demo-chart:nth-child(1) {
   color: #F44336;

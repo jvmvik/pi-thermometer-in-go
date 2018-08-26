@@ -7,6 +7,10 @@ For ease of use, this application can be executed as root by setting port number
  you can leave the port to 8080 if you do not want to run this application as root.
  also you can start a frontend web server like Apache2 and redirect the traffic from port 80.
 
+Quick start
+---
+$ sudo make all
+
 How to run / compile?
 ---
 On my Raspbian runnning on Pi Zero.
@@ -19,6 +23,22 @@ $>go run spa_monitor.go
 For more speed the application can be compiled then executed:
 $>go build spa_monitor.go
 $>./spa_monitor
+
+How to run this a daemon using systemd ?
+---
+You need to edit the path in spa_monitor.service
+
+To test the systemd configuration file
+$ make install start 
+
+Enable the service
+$ make enable
+
+To stop the service
+$ make stop
+
+To restart
+$ make stop start
 
 Note
 ---
