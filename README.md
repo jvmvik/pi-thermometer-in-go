@@ -24,8 +24,9 @@ Run go as script.
 
 For more speed the application can be compiled then executed:
 
-`$ go build spa_monitor.go
-$ ./spa_monitor`
+`$ go build spa_monitor.go`
+
+`$ ./spa_monitor`
 
 How to run this a daemon using systemd ?
 ---
@@ -53,8 +54,9 @@ This process is not detached so I'm running a tmux session on the background.
  tmux enables to run terminal session on the background on a linux system.
 https://en.wikipedia.org/wiki/Tmux
 
-`$ apt install tmux
-$ tmux new -s spa`
+`$ apt install tmux`
+
+`$ tmux new -s spa`
 
 An other solution is to create a daemon using systemctl or service.
 
