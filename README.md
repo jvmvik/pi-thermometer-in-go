@@ -58,8 +58,6 @@ https://en.wikipedia.org/wiki/Tmux
 
 `$ tmux new -s spa`
 
-An other solution is to create a daemon using systemctl or service.
-
 Reference
 ---
  https://www.modmypi.com/blog/ds18b20-one-wire-digital-temperature-sensor-and-the-raspberry-pi
